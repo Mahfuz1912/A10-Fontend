@@ -1,13 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
-import {
-  FaTrash,
-  FaStar,
-  FaCalendarAlt,
-  FaImage,
-  FaExclamationTriangle,
-  FaSpinner,
-} from "react-icons/fa";
+import { FaTrash, FaStar, FaCalendarAlt, FaImage, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { authContext } from "../../AuthProvider/AuthProvider";
 
 const GameWatchList = () => {
@@ -17,67 +10,74 @@ const GameWatchList = () => {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const fetchWatchList = useCallback(async (signal) => {
+    if (!user?.email) {
+      setWatchList([]);
+      setError(null);
+      return;
+    }
+
+    setFetchLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `https://a10-backend-eight.vercel.app/watchList?email=${encodeURIComponent(user.email)}`,
+        {
+          signal,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setWatchList(data);
+      setError(null);
+    } catch (err) {
+      if (err.name === "AbortError") return;
+      
+      const errorMessage = err.message || "Failed to load watch list";
+      setError(errorMessage);
+      
+      Swal.fire({
+        title: "Error",
+        text: errorMessage,
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+      });
+    } finally {
+      setFetchLoading(false);
+    }
+  }, [user?.email]);
+
   useEffect(() => {
     if (loading) {
       setFetchLoading(true);
       return;
     }
 
-    if (!user || !user.email) {
+    const controller = new AbortController();
+    
+    // Only fetch if user is logged in
+    if (user?.email) {
+      fetchWatchList(controller.signal);
+    } else {
+      // Clear data if user logs out
       setWatchList([]);
       setError(null);
-      return;
+      setFetchLoading(false);
     }
 
-    const controller = new AbortController();
-    setFetchLoading(true);
-    setError(null);
-
-    fetch(
-      `https://a10-backend-eight.vercel.app/watchList?email=${encodeURIComponent(
-        user.email
-      )}`,
-      {
-        signal: controller.signal,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(
-            errorData.message || `HTTP error! status: ${res.status}`
-          );
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setWatchList(data);
-        setError(null);
-      })
-      .catch((err) => {
-        if (err.name === "AbortError") return;
-
-        const errorMessage = err.message || "Failed to load watch list";
-        setError(errorMessage);
-
-        Swal.fire({
-          title: "Error",
-          text: errorMessage,
-          icon: "error",
-          confirmButtonColor: "#3085d6",
-        });
-      })
-      .finally(() => {
-        setFetchLoading(false);
-      });
-
     return () => controller.abort();
-  }, [user, user?.email, loading]);
+  }, [user, loading, fetchWatchList]);
 
-  const handleRemoveFromWatchList = (id, title) => {
+  const handleRemoveFromWatchList = async (id, title) => {
     Swal.fire({
       title: "Remove from Watch List?",
       html: `<p>Are you sure you want to remove <strong>"${title}"</strong> from your watch list?</p>`,
@@ -89,50 +89,51 @@ const GameWatchList = () => {
       cancelButtonText: "Cancel",
       reverseButtons: true,
       focusCancel: true,
-    }).then((result) => {
+    }).then(async (result) => {
       if (!result.isConfirmed) return;
-
+      
       setDeletingId(id);
-
-      fetch(`https://a10-backend-eight.vercel.app/watchList/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(async (res) => {
-          if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(
-              errorData.message || `HTTP error! status: ${res.status}`
-            );
+      
+      try {
+        const response = await fetch(`https://a10-backend-eight.vercel.app/watchList/${id}`, {
+          method: "DELETE",
+          headers: {
+            'Content-Type': 'application/json',
           }
-          return res.json();
-        })
-        .then(() => {
-          const remaining = watchList.filter((item) => item._id !== id);
-          setWatchList(remaining);
+        });
 
-          Swal.fire({
-            title: "Removed!",
-            text: `"${title}" has been removed from your watch list.`,
-            icon: "success",
-            confirmButtonColor: "#3085d6",
-            timer: 2000,
-            timerProgressBar: true,
-          });
-        })
-        .catch((error) => {
-          console.error("Error deleting watchlist item:", error);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        }
 
-          Swal.fire({
-            title: "Error",
-            text: error.message || "Failed to remove item. Please try again.",
-            icon: "error",
-            confirmButtonColor: "#d33",
-          });
-        })
-        .finally(() => setDeletingId(null));
+        // Optimistically update UI
+        setWatchList(prev => prev.filter((item) => item._id !== id));
+        
+        Swal.fire({
+          title: "Removed!",
+          text: `"${title}" has been removed from your watch list.`,
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+        });
+      } catch (error) {
+        console.error("Error deleting watchlist item:", error);
+        
+        // Revert optimistic update by refetching
+        fetchWatchList();
+        
+        Swal.fire({
+          title: "Error",
+          text: error.message || "Failed to remove item. Please try again.",
+          icon: "error",
+          confirmButtonColor: "#d33",
+        });
+      } finally {
+        setDeletingId(null);
+      }
     });
   };
 
@@ -152,12 +153,10 @@ const GameWatchList = () => {
   if (!user) {
     return (
       <div className="max-w-6xl mx-auto p-6">
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-r-lg">
           <div className="flex items-center">
             <FaExclamationTriangle className="text-yellow-400 mr-2" />
-            <p className="text-yellow-700">
-              Please log in to view your watch list.
-            </p>
+            <p className="text-yellow-700">Please log in to view your watch list.</p>
           </div>
         </div>
       </div>
@@ -176,7 +175,7 @@ const GameWatchList = () => {
       </div>
 
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
           <div className="flex items-center">
             <FaExclamationTriangle className="text-red-500 mr-2" />
             <p className="text-red-700">{error}</p>
@@ -184,57 +183,40 @@ const GameWatchList = () => {
         </div>
       )}
 
-      {watchList.length === 0 ? (
-        <div className="bg-gray-50 rounded-xl p-8 text-center">
+      {watchList.length === 0 && !fetchLoading ? (
+        <div className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-200">
           <div className="max-w-md mx-auto">
-            <div className="text-6xl mb-4">📺</div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              Your watch list is empty
-            </h3>
+            <div className="text-6xl mb-4 text-gray-400">📺</div>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">Your watch list is empty</h3>
             <p className="text-gray-500 mb-4">
               Start adding games to your watch list to see them here!
             </p>
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Game
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Rating
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Year
                   </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
+                  <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {watchList.map((item) => (
-                  <tr
-                    key={item._id}
-                    className="hover:bg-gray-50 transition-colors duration-150"
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                  <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-150">
+                    <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-16 w-16">
                           {item.imageUrl ? (
@@ -243,8 +225,7 @@ const GameWatchList = () => {
                               src={item.imageUrl}
                               alt={item.title}
                               onError={(e) => {
-                                e.target.src =
-                                  "https://via.placeholder.com/64?text=No+Image";
+                                e.target.src = "https://via.placeholder.com/64?text=No+Image";
                                 e.target.onerror = null;
                               }}
                             />
@@ -284,16 +265,13 @@ const GameWatchList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button
-                        onClick={() =>
-                          handleRemoveFromWatchList(item._id, item.title)
-                        }
+                        onClick={() => handleRemoveFromWatchList(item._id, item.title)}
                         disabled={deletingId === item._id}
                         className={`
                           inline-flex items-center px-4 py-2 rounded-lg transition-all duration-200
-                          ${
-                            deletingId === item._id
-                              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                              : "bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                          ${deletingId === item._id
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                            : "bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
                           }
                         `}
                         aria-label={`Remove ${item.title} from watch list`}
@@ -316,18 +294,15 @@ const GameWatchList = () => {
               </tbody>
             </table>
           </div>
-
+          
           {/* Summary footer */}
           <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
             <div className="flex justify-between items-center">
               <div className="text-sm text-gray-600">
-                Showing{" "}
-                <span className="font-semibold">{watchList.length}</span>{" "}
-                game(s) in your watch list
+                Showing <span className="font-semibold">{watchList.length}</span> game(s) in your watch list
               </div>
               <div className="text-sm text-gray-600">
-                Total games:{" "}
-                <span className="font-semibold">{watchList.length}</span>
+                Total games: <span className="font-semibold">{watchList.length}</span>
               </div>
             </div>
           </div>
