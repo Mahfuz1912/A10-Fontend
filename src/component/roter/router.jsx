@@ -18,10 +18,14 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+
     children: [
       {
         path: "/",
         element: <Home />,
+        loader: () => {
+          return fetch("https://a10-backend-eight.vercel.app/reviews");
+        },
       },
       {
         path: "/login",
@@ -69,7 +73,9 @@ export const router = createBrowserRouter([
         path: "/reviewdetails/:id",
         element: <ReviewDetails />,
         loader: async ({ params }) => {
-          const DetailsData = await fetch(`https://a10-backend-eight.vercel.app/reviews`);
+          const DetailsData = await fetch(
+            `https://a10-backend-eight.vercel.app/reviews`
+          );
           const data = await DetailsData.json();
           const singleDetails = data.find((detail) => detail._id == params.id);
           return singleDetails;
@@ -83,7 +89,9 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) => {
-          return fetch(`https://a10-backend-eight.vercel.app/reviews/${params.id}`);
+          return fetch(
+            `https://a10-backend-eight.vercel.app/reviews/${params.id}`
+          );
         },
       },
     ],
