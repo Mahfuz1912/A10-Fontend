@@ -33,30 +33,33 @@ const ReviewDetails = () => {
     return <div className="flex items-center gap-1">{stars}</div>;
   };
 
-const handleAddToWatchList = (review) => {
-  const watchListData = {
-    reviewId: review._id,
-    imageUrl: review.imageUrl,
-    title: review.title,
-    review: review.review,
-    rating: review.rating,
-    publishingYear: review.publishingYear,
-    genre: review.genre,
-    reviewerName: review.reviewerName,
-    reviewerEmail: review.reviewerEmail,
-    addWatchListReviewerName: user.displayName,
-    addWatchListReviewerEmail: user.email,
+  const handleAddToWatchList = (review) => {
+    const watchListData = {
+      reviewId: review._id,
+      imageUrl: review.imageUrl,
+      title: review.title,
+      review: review.review,
+      rating: review.rating,
+      publishingYear: review.publishingYear,
+      genre: review.genre,
+      reviewerName: review.reviewerName,
+      reviewerEmail: review.reviewerEmail,
+      addWatchListReviewerName: user.displayName,
+      addWatchListReviewerEmail: user.email,
+    };
+
+    fetch("https://a10-backend-eight.vercel.app/watchlist", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(watchListData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insertedId) {
+          alert("Added to Watchlist Successfully!");
+        }
+      });
   };
-
-  fetch("https://a10-backend-eight.vercel.app/watchlist", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(watchListData),
-  })
-    .then(res => res.json())
-    .then(data => console.log(data));
-};
-
 
   return (
     <div className="min-h-screen py-12 px-4 bg-slate-900">

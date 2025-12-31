@@ -1,28 +1,47 @@
 import { FaEdit, FaTrashAlt } from "react-icons/fa"; // Optional: npm install react-icons
 import { NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const MyReviewCard = ({ review, index, onDelete }) => {
   const { title, genre, publishingYear, rating, imageUrl, _id } = review;
 
   const handleDelete = (id) => {
-    // Removed confirm prompt; show a single alert on successful deletion only
-    fetch(`https://a10-backend-eight.vercel.app/deleteReview/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && (data.deletedCount > 0 || data.ok || data.success)) {
-          // Inform parent to remove item from UI
-          if (typeof onDelete === "function") onDelete(id);
-          alert("Review deleted successfully!");
-        } else {
-          throw new Error("Delete failed");
-        }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+
+      fetch(`https://a10-backend-eight.vercel.app/deleteReview/${id}`, {
+        method: "DELETE",
       })
-      .catch((error) => {
-        console.error("Error deleting review:", error);
-        // keep only one alert (success); log errors for debugging
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && (data.deletedCount > 0 || data.ok || data.success)) {
+            if (typeof onDelete === "function") onDelete(id);
+            Swal.fire({
+              title: "Deleted!",
+              text: "Review deleted successfully.",
+              icon: "success",
+            });
+          } else {
+            throw new Error("Delete failed");
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting review:", error);
+          Swal.fire({
+            title: "Error",
+            text: "Failed to delete the review. Please try again.",
+            icon: "error",
+          });
+        });
+    });
   };
 
   return (
@@ -70,16 +89,15 @@ const MyReviewCard = ({ review, index, onDelete }) => {
       {/* Actions */}
       <td className="p-5">
         <div className="flex justify-end gap-3">
-          <button
-            className="btn btn-sm btn-ghost bg-blue-500/10 hover:bg-blue-500 hover:text-white border-blue-500/20"
-            title="Edit Review"
-          >
-            <NavLink to={`/updateReview/${_id}`}>
+          <NavLink to={`/updateReview/${_id}`}>
+            <button
+              className="btn btn-sm btn-ghost bg-blue-500/10 hover:bg-blue-500 hover:text-white border-blue-500/20"
+              title="Edit Review"
+            >
               <FaEdit size={16} />
               <span className="hidden lg:inline">Update</span>
-            </NavLink>
-          </button>
-
+            </button>
+          </NavLink>
           <button
             onClick={() => handleDelete(_id)}
             className="btn btn-sm btn-ghost bg-red-500/10 hover:bg-red-500 hover:text-white border-red-500/20"
