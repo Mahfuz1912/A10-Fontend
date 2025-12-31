@@ -42,7 +42,7 @@ const handleAddToWatchList = (review) => {
     rating: review.rating,
     publishingYear: review.publishingYear,
     genre: review.genre,
-    reviewerName: review.reviwerName,
+    reviewerName: review.reviewerName,
     reviewerEmail: review.reviewerEmail,
     addWatchListReviewerName: user.displayName,
     addWatchListReviewerEmail: user.email,

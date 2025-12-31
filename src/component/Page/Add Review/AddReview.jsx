@@ -12,49 +12,49 @@ const AddReview = () => {
     const title = form.title.value;
     const imageUrl = form.imageUrl.value;
     const review = form.review.value;
-    const rating = form.rating.value;
-    const publishingYear = form.publishingYear.value;
+    const rating = Number(form.rating.value); // numeric
+    const publishingYear = Number(form.publishingYear.value); // numeric
     const genre = form.genre.value;
-    const reviwerName = user?.displayName;
+    const reviewerName = user?.displayName; // spelling corrected
     const reviewerEmail = user?.email;
 
-    console.log({
+    const reviewData = {
       imageUrl,
       title,
       review,
       rating,
       publishingYear,
       genre,
-      reviwerName,
+      reviewerName,
       reviewerEmail,
-    });
+    };
+    console.log("Submitting review:", reviewData);
 
     fetch("https://a10-backend-eight.vercel.app/addReview", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        imageUrl,
-        title,
-        review,
-        rating,
-        publishingYear,
-        genre,
-        reviwerName,
-        reviewerEmail,
-      }),
+      body: JSON.stringify(reviewData),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Review added:", data);
-        alert("Review submitted successfully!");
+      .then(async (res) => {
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Review submitted successfully!");
+          form.reset();
+        } else {
+          alert(
+            `❌ Failed to submit review: ${data.message || "Unknown error"}`
+          );
+        }
+        console.log("Server response:", data);
       })
       .catch((error) => {
-        console.error("Error adding review:", error);
-        alert("Failed to submit review. Please try again.");
+        console.error("Network or server error:", error);
+        alert("❌ Failed to submit review. Please check console for details.");
       });
   };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4">
       <div className="max-w-2xl mx-auto">
