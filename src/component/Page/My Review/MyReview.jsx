@@ -5,16 +5,19 @@ import MyReviewCard from "./MyReviewCard";
 
 const MyReview = () => {
   const data = useLoaderData();
-  const normalizedData = useMemo(() => (data ? data : []), [data]);
+  // Ensure data is always an array
+  const normalizedData = useMemo(
+    () => (Array.isArray(data) ? data : []),
+    [data]
+  );
   const { user, loading } = useContext(authContext);
   const [myReviews, setMyReviews] = useState([]);
 
   useEffect(() => {
-    if (!normalizedData || !user) return;
+    if (!Array.isArray(normalizedData) || !user) return;
     const filtered = normalizedData.filter(
       (review) => review.reviewerEmail === user.email
     );
-    // defer state update to avoid sync setState warnings
     setTimeout(() => setMyReviews(filtered), 0);
   }, [normalizedData, user]);
 
@@ -46,15 +49,14 @@ const MyReview = () => {
           Manage all your game reviews in one place.
         </p>
         <div className="badge badge-outline badge-secondary mt-4 px-4 py-3">
-          Total: {myReviews.length}
+          Total: {Array.isArray(myReviews) ? myReviews.length : 0}
         </div>
       </div>
 
       <div className="bg-base-200/50 backdrop-blur-md rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
-        {myReviews.length > 0 ? (
+        {Array.isArray(myReviews) && myReviews.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="table w-full">
-              {/* Table Head */}
               <thead className="bg-base-300/50">
                 <tr className="text-gray-300 text-sm uppercase tracking-wider border-b border-white/10">
                   <th className="p-5">#</th>
@@ -64,8 +66,6 @@ const MyReview = () => {
                   <th className="text-right p-5">Actions</th>
                 </tr>
               </thead>
-
-              {/* Table Body */}
               <tbody className="divide-y divide-white/5">
                 {myReviews.map((myReview, idx) => (
                   <MyReviewCard
