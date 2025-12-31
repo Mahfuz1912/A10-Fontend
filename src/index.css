@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.slide-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.55) 40%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem 1.5rem 4rem; /* more bottom padding so title/text sit lower */
+}
+
+.slide-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.slide-text {
+  max-width: 500px;
+  margin-top: 1rem;
+}
