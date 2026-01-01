@@ -203,7 +203,7 @@ const AllReviews = () => {
               onClick={handleResetFilters}
               className="w-full lg:w-auto px-6 py-3 bg-linear-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white font-medium rounded-xl border border-slate-600 transition-all duration-300 hover:shadow-lg"
             >
-              Reset Filters
+              Reset
             </button>
           </div>
         </div>

@@ -40,7 +40,7 @@ const ControlledCarousel = () => {
         speed={1500}
         parallax={true}
         autoplay={{
-          delay: 5000,
+          delay: 3000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
@@ -59,9 +59,9 @@ const ControlledCarousel = () => {
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         className="relative z-10 rounded-2xl shadow-2xl"
       >
-        {slides.map((slide, index) => (
+        {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative h-[80vh]">
+            <div className="relative h-[400px]  w-full overflow-hidden rounded-2xl">
               {/* Background Image with Gradient Overlay */}
               <div className="absolute inset-0">
                 <img
@@ -76,10 +76,10 @@ const ControlledCarousel = () => {
 
               {/* Content Overlay */}
               <div className="relative h-full flex items-center">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:pl-20 w-full">
                   <div className="grid lg:grid-cols-2 gap-8 items-center">
                     {/* Left: Text Content */}
-                    <div className="text-white space-y-6">
+                    <div className="text-white mt-6">
                       {/* Game Tag */}
                       <div className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600/20 to-pink-600/20 px-4 py-2 rounded-full backdrop-blur-sm border border-purple-500/20">
                         <FaGamepad className="text-amber-400" />
@@ -90,7 +90,7 @@ const ControlledCarousel = () => {
 
                       {/* Title */}
                       <h1
-                        className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+                        className="text-4xl md:text-5xl font-bold leading-tight"
                         data-swiper-parallax="-300"
                       >
                         <span className="bg-linear-to-r from-amber-200 via-white to-purple-200 bg-clip-text text-transparent">
@@ -100,7 +100,7 @@ const ControlledCarousel = () => {
 
                       {/* Description */}
                       <p
-                        className="text-lg md:text-xl lg:text-2xl text-slate-300 leading-relaxed max-w-2xl"
+                        className="text-xl text-slate-300 leading-relaxed max-w-2xl"
                         data-swiper-parallax="-500"
                       >
                         {slide.description}
@@ -113,14 +113,14 @@ const ControlledCarousel = () => {
                       >
                         <div className="flex items-center gap-2">
                           <FaStar className="text-amber-500" />
-                          <span className="text-xl font-bold">
+                          <span className="text-lg font-bold">
                             {slide.rating}
                           </span>
                           <span className="text-slate-400">/10 Rating</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <FaUsers className="text-blue-500" />
-                          <span className="text-xl font-bold">
+                          <span className="text-lg font-bold">
                             {slide.players}
                           </span>
                           <span className="text-slate-400">Players</span>
@@ -159,7 +159,7 @@ const ControlledCarousel = () => {
                     </div>
 
                     {/* Right: Additional Content */}
-                    <div className="hidden lg:block">
+                    {/* <div className="hidden lg:block">
                       <div
                         className="bg-linear-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 shadow-2xl"
                         data-swiper-parallax="-1300"
@@ -184,7 +184,7 @@ const ControlledCarousel = () => {
                           ))}
                         </ul>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -209,24 +209,24 @@ const ControlledCarousel = () => {
         ))}
 
         {/* Custom Navigation Buttons */}
-        <div className="swiper-button-prev absolute left-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-white hover:bg-slate-700/50 hover:border-purple-500/50 transition-all duration-300">
-          <div className="absolute inset-0 flex items-center justify-center">
+        <div className="swiper-button-prev absolute left-4 top-1/2 transform -translate-y-1/2 z-20 w-15 h-15 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-white hover:bg-slate-700/50 hover:border-purple-500/50 transition-all duration-300">
+          {/* <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-2xl">←</span>
-          </div>
+          </div> */}
         </div>
-        <div className="swiper-button-next absolute right-4 top-1/2 transform -translate-y-1/2 z-20 w-12 h-12 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-white hover:bg-slate-700/50 hover:border-purple-500/50 transition-all duration-300">
-          <div className="absolute inset-0 flex items-center justify-center">
+        <div className="swiper-button-next absolute right-4 top-1/2 transform -translate-y-1/2 z-20 w-15 h-15 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-white hover:bg-slate-700/50 hover:border-purple-500/50 transition-all duration-300">
+          {/* <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-2xl">→</span>
-          </div>
+          </div> */}
         </div>
       </Swiper>
 
       {/* Active Slide Indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+      {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
         <div className="px-4 py-2 bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-full text-sm text-slate-300">
           {activeIndex + 1} / {slides.length}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
