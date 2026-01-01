@@ -218,7 +218,7 @@ const GameWatchList = () => {
                   <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-150">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-16 w-16">
+                        <div className="shrink-0 h-16 w-16">
                           {item.imageUrl ? (
                             <img
                               className="h-16 w-16 rounded-lg object-cover border border-gray-200"
@@ -300,9 +300,6 @@ const GameWatchList = () => {
             <div className="flex justify-between items-center">
               <div className="text-sm text-gray-600">
                 Showing <span className="font-semibold">{watchList.length}</span> game(s) in your watch list
-              </div>
-              <div className="text-sm text-gray-600">
-                Total games: <span className="font-semibold">{watchList.length}</span>
               </div>
             </div>
           </div>

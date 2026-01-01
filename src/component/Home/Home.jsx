@@ -11,7 +11,7 @@ const Home = () => {
   console.log(data);
   return (
     <>
-      <div className="w-11/12 mx-auto md:my-18 my-40">
+      <div className="w-11/12 mx-auto my-3">
         <ControlledCarousel />
       </div>
       <div>

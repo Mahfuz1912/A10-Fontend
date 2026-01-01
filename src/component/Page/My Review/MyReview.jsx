@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { authContext } from "../../AuthProvider/AuthProvider";
 import MyReviewCard from "./MyReviewCard";
-import { FaGamepad, FaStar, FaCalendarAlt, FaFilter, FaSortAmountDown, FaPlus, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
+import { FaGamepad, FaStar, FaCalendarAlt, FaSortAmountDown, FaPlus, FaSpinner } from "react-icons/fa";
 
 const MyReview = () => {
   const data = useLoaderData();
@@ -74,7 +74,7 @@ const MyReview = () => {
 
   if (loading || isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-slate-900 to-slate-800 flex flex-col items-center justify-center">
         <FaSpinner className="animate-spin text-4xl text-purple-500 mb-4" />
         <p className="text-slate-300 text-lg">Loading your reviews...</p>
       </div>
@@ -83,7 +83,7 @@ const MyReview = () => {
 
   if (!user || !user.email) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
         <div className="max-w-md mx-auto text-center">
           <div className="p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50">
             <div className="text-6xl mb-4">🔐</div>
@@ -93,7 +93,7 @@ const MyReview = () => {
             </p>
             <button
               onClick={() => navigate("/login")}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300"
+              className="px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300"
             >
               Go to Login
             </button>
@@ -113,13 +113,13 @@ const MyReview = () => {
     : "N/A";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-b from-slate-900 to-slate-800 py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="mb-12">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
             <div>
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 px-4 py-2 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600/20 to-pink-600/20 px-4 py-2 rounded-full mb-4">
                 <FaGamepad className="text-amber-400" />
                 <span className="text-sm font-medium text-amber-200">Your Game Reviews</span>
               </div>
@@ -133,7 +133,7 @@ const MyReview = () => {
             
             <button
               onClick={() => navigate("/addreview")}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
+              className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
             >
               <FaPlus />
               Add New Review
@@ -142,7 +142,7 @@ const MyReview = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-3xl font-bold text-white">{totalReviews}</div>
@@ -154,7 +154,7 @@ const MyReview = () => {
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-3xl font-bold text-white">{avgRating}</div>
@@ -166,7 +166,7 @@ const MyReview = () => {
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
+            <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-3xl font-bold text-white">{latestYear}</div>
@@ -181,7 +181,7 @@ const MyReview = () => {
         </div>
 
         {/* Filters and Controls */}
-        <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 mb-8">
+        <div className="bg-linear-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-6 items-center">
             <div className="w-full lg:w-2/5">
               <div className="relative">
@@ -246,7 +246,7 @@ const MyReview = () => {
               {totalReviews === 0 && (
                 <button
                   onClick={() => navigate("/addreview")}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300"
+                  className="px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300"
                 >
                   Create Your First Review
                 </button>

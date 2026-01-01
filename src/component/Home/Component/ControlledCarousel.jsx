@@ -32,7 +32,7 @@ const ControlledCarousel = () => {
   return (
     <div className="relative overflow-hidden rounded-2xl">
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-slate-900/40 to-purple-900/20 z-0"></div>
+      <div className="absolute inset-0 bg-linear-to-r from-purple-900/20 via-slate-900/40 to-purple-900/20 z-0"></div>
 
       <Swiper
         modules={[EffectFade, Autoplay, Pagination, Navigation, Parallax]}
@@ -48,7 +48,7 @@ const ControlledCarousel = () => {
           clickable: true,
           dynamicBullets: true,
           renderBullet: function (index, className) {
-            return `<span class="${className} bg-gradient-to-r from-purple-500 to-pink-500"></span>`;
+            return `<span class="${className} bg-linear-to-r from-purple-500 to-pink-500"></span>`;
           },
         }}
         navigation={{
@@ -61,17 +61,17 @@ const ControlledCarousel = () => {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative h-[80vh] md:h-[85vh] lg:h-[90vh]">
+            <div className="relative h-[80vh]">
               {/* Background Image with Gradient Overlay */}
               <div className="absolute inset-0">
                 <img
                   src={slide.img}
                   alt={slide.title}
-                  className="w-full h-full object-cover transition-transform duration-700"
+                  className="w-full h-full object-fit transition-transform duration-700"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-slate-900/40"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/70 to-slate-900/40"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-purple-900/30 to-transparent"></div>
               </div>
 
               {/* Content Overlay */}
@@ -81,7 +81,7 @@ const ControlledCarousel = () => {
                     {/* Left: Text Content */}
                     <div className="text-white space-y-6">
                       {/* Game Tag */}
-                      <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 px-4 py-2 rounded-full backdrop-blur-sm border border-purple-500/20">
+                      <div className="inline-flex items-center gap-2 bg-linear-to-r from-purple-600/20 to-pink-600/20 px-4 py-2 rounded-full backdrop-blur-sm border border-purple-500/20">
                         <FaGamepad className="text-amber-400" />
                         <span className="text-sm font-medium text-amber-200">
                           Featured Game
@@ -93,7 +93,7 @@ const ControlledCarousel = () => {
                         className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
                         data-swiper-parallax="-300"
                       >
-                        <span className="bg-gradient-to-r from-amber-200 via-white to-purple-200 bg-clip-text text-transparent">
+                        <span className="bg-linear-to-r from-amber-200 via-white to-purple-200 bg-clip-text text-transparent">
                           {slide.title}
                         </span>
                       </h1>
@@ -149,7 +149,7 @@ const ControlledCarousel = () => {
                       >
                         <button
                           onClick={() => navigate("/allreviews")}
-                          className="group px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/25 flex items-center gap-2"
+                          className="group px-8 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-500 hover:to-pink-500 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/25 flex items-center gap-2"
                         >
                           <FaPlay />
                           Explore Reviews
@@ -161,7 +161,7 @@ const ControlledCarousel = () => {
                     {/* Right: Additional Content */}
                     <div className="hidden lg:block">
                       <div
-                        className="bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 shadow-2xl"
+                        className="bg-linear-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-6 shadow-2xl"
                         data-swiper-parallax="-1300"
                       >
                         <h3 className="text-2xl font-bold text-white mb-4">
@@ -178,7 +178,7 @@ const ControlledCarousel = () => {
                               key={idx}
                               className="flex items-center gap-3 text-slate-300"
                             >
-                              <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                              <div className="w-2 h-2 bg-linear-to-r from-purple-500 to-pink-500 rounded-full"></div>
                               {item}
                             </li>
                           ))}
@@ -197,7 +197,7 @@ const ControlledCarousel = () => {
                       key={idx}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
                         activeIndex === idx
-                          ? "w-8 bg-gradient-to-r from-purple-500 to-pink-500"
+                          ? "w-8 bg-linear-to-r from-purple-500 to-pink-500"
                           : "bg-slate-600"
                       }`}
                     />
@@ -235,8 +235,8 @@ const ControlledCarousel = () => {
 const slides = [
   {
     id: 1,
-    img: "https://images.unsplash.com/photo-1633265486064-086b219458ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    title: "Efootball 2024",
+    img: "https://wallpapercave.com/wp/wp11425017.jpg",
+    title: "Efootball 2026",
     description:
       "Experience the thrill of virtual soccer like never before with realistic physics, stunning graphics, and competitive multiplayer gameplay.",
     rating: "9.2",
@@ -245,7 +245,7 @@ const slides = [
   },
   {
     id: 2,
-    img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    img: "https://wallpapers.com/images/featured/pubg-go20ghrcj4ybxhvq.jpg",
     title: "PUBG Mobile",
     description:
       "Join the ultimate battle royale experience on mobile. Survive, loot, and dominate in intense 100-player matches with friends.",
@@ -255,7 +255,7 @@ const slides = [
   },
   {
     id: 3,
-    img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    img: "https://wallpapers.com/images/featured/free-fire-gi0jpopdq4b0q5aj.jpg",
     title: "Free Fire",
     description:
       "Ignite your passion for fast-paced battle royale action. Quick matches, unique characters, and intense survival gameplay await.",
@@ -265,7 +265,7 @@ const slides = [
   },
   {
     id: 4,
-    img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    img: "https://valorantstrike.com/wp-content/uploads/2020/07/Valorant-Wallpaper-Boys-Rainbow-Display.jpg",
     title: "Valorant",
     description:
       "Precision, strategy, and teamwork combine in this tactical shooter. Master unique agents and compete in ranked matches.",
